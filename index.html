@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- css linking -->
+    <link rel="stylesheet" href="style.css">
+    <!-- css bulma -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Image Sensor</title>
+</head>
+
+<body>
+    <div class="container is-flex">
+        <!-- input container -->
+        <div class="container is-flex-direction-column p-2" id="input-section">
+            <h4>Input Image</h4>
+            <div class="input-fle">
+                <canvas id="myCanvas" style="display: none;"></canvas>
+                <div class="input-file pb-4">
+                    <input type="file" id="myfile" name="myfile">
+                </div>
+                <div id="img-area p-4">
+                    <img src="" id="image-preview" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- options section -->
+        <div class="container p-2" id="options">
+            <h4 class="ml-2">Options</h4>
+            <div class="container option-list is-flex-direction-column">
+                <div class="shape is-flex-direction-column p-2">
+                    <h2>Shape</h2>
+                    <div class="is-flex ">
+                        <input type="radio" id="rectangle" value="0" name="rectangle" style="display:none">
+                        <label for="rectangle"><button class="button is-small">Rectangle</button></label>
+                        <input type="radio" id="ellipse" value="1" name="ellipse" style="display:none">
+                        <label for="ellipse"><button class="button is-small">Ellipse</button></label>
+                    </div>
+                </div>
+                <div class="method is-flex-direction-row p-2">
+                    <h2>Methods</h2>
+                    <div class="is-flex">
+                        <button class="button" id="button1">Pixelate</button>
+                        <button class="button" id="button2">Blur</button>
+                        <button class="button" id="button3">Solid-color</button>
+                    </div>
+                </div>
+                <div class="block-size is-flex-direction-column p-2">
+                    <div class="container" id="block-space">
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- output section -->
+        <div class="container is-flex" id="ouput-section">
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
