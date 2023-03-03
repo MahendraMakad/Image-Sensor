@@ -19,7 +19,7 @@ body {
     --highlighted-button-bg-color: #6262cd;
     --links-color: #5d94ff;
     --links-color-footer: #45aaff;
-    --bg-color:#171b68;
+    --bg-color: #171b68;
 }
 
 /* .button {
@@ -38,8 +38,6 @@ body {
 #options .button:hover {
     color: var(--highlighted-button-color);
 }
-
-
 
 
 #input-section {
@@ -66,7 +64,6 @@ body {
     border: 2px solid gray;
     width: 50%;
     color: white;
-    
 }
 
 #options h4 {
@@ -82,4 +79,41 @@ body {
 }
 
 
+
+/* output-section */
+#output-section {
+    border: 2px solid grey;
+    border-radius: 2px;
+    width: 100%;
+    height: 500px;
+}
+
+/* sensor-button */
+.sensor-btn {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    background-color: #1fb62b;
+    color: #fff;
+    padding: 10px 20px;
+    margin: 20px 20px;
+    transform: translateX(-50%);
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.p-2 .download-btn {
+    background-color: rgb(202, 202, 202);
+    border-radius: 1px;
+    height: 7px;
+    width: max-content;
+    padding: 10px 20px;
+}
+
+.p-2 .download-btn:hover {
+    background-color: #3f4143;
+    color: white;
+}
 
