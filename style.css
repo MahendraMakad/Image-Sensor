@@ -48,6 +48,10 @@ body {
     width: 50%;
 }
 
+#input-section #image-preview {
+    max-width: 500px;
+}
+
 #input-section h4 {
     background-color: var(--highlighted-button-color);
     color: black;
@@ -88,6 +92,12 @@ body {
     height: 500px;
 }
 
+#myCanvas {
+    max-width: 500px;
+}
+
+
+
 /* sensor-button */
 .sensor-btn {
     position: fixed;
@@ -116,4 +126,3 @@ body {
     background-color: #3f4143;
     color: white;
 }
-
