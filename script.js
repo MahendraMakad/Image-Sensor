@@ -3,7 +3,7 @@ const imagePreview = document.getElementById('image-preview');
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext("2d");
 var originalData;// to store original image data for restoration
-var selectedShape="rectangle"; // global variable for selecting rectangle or ellipse shape
+var selectedShape = "rectangle"; // global variable for selecting rectangle or ellipse shape
 var clickedButton;//global variable to check which method is selected(blur,pixelate or color())
 
 // load image into canvas
@@ -23,19 +23,19 @@ const html1 = `<h4 style="width: 110px">Block size(px)</h4>
 </div>`;
 
 // selecting rectangle shape
-document.getElementById("rectangle").addEventListener("click",()=> {
-  document.getElementById("rectangle").style.backgroundColor="#171b68";
-  document.getElementById("ellipse").style.backgroundColor="#171b68";
-  document.getElementById("rectangle").style.backgroundColor="#6262cd";
+document.getElementById("rectangle").addEventListener("click", () => {
+  document.getElementById("rectangle").style.backgroundColor = "#171b68";
+  document.getElementById("ellipse").style.backgroundColor = "#171b68";
+  document.getElementById("rectangle").style.backgroundColor = "#6262cd";
   selectedShape = "rectangle";
   console.log(selectedShape);
 });
 
 // selecting ellipse shape
-document.getElementById("ellipse").addEventListener("click",()=> {
-  document.getElementById("rectangle").style.backgroundColor="#171b68";
-  document.getElementById("ellipse").style.backgroundColor="#171b68";
-  document.getElementById("ellipse").style.backgroundColor="#6262cd";
+document.getElementById("ellipse").addEventListener("click", () => {
+  document.getElementById("rectangle").style.backgroundColor = "#171b68";
+  document.getElementById("ellipse").style.backgroundColor = "#171b68";
+  document.getElementById("ellipse").style.backgroundColor = "#6262cd";
   selectedShape = "ellipse";
   console.log(selectedShape);
 });
@@ -104,37 +104,48 @@ button3.addEventListener("click", () => {
 });
 
 
-// function to load image
-function loadImage() {
-  const file = fileInput.files[0];
-  const reader = new FileReader();
-  reader.onload = function () {
-    imagePreview.src = reader.result;
-    imagePreview.style.width = "350px";
-    imagePreview.style.height = "300px";
-  };
-  reader.readAsDataURL(file);
-};
+
 
 // eventlistener for taking an image file as input 
 // then it will draw input file on canas '#myCanvas' and on image
 // '#image-preview'
-fileInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
+fileInput.addEventListener('change', function() {
+  // Get the selected file
+  const file = this.files[0];
+
+  // Create a FileReader to read the file
   const reader = new FileReader();
-  reader.onload = function (event) {
-    const img = new Image();
-    img.onload = function () {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0, 350, 300);
-    };
-    img.src = event.target.result;
-    originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  };
+
+  // When the reader loads, set the image source and draw it on the canvas
+  reader.addEventListener('load', function() {
+    // Create an Image object to hold the loaded image
+    const image = new Image();
+
+    // When the image loads, set the preview image source and draw it on the canvas
+    image.addEventListener('load', function() {
+      // Get the canvas context
+      const ctx = canvas.getContext('2d');
+
+      // Set the canvas dimensions to match the image dimensions
+      canvas.width = this.width;
+      canvas.height = this.height;
+
+      // Draw the image on the canvas
+      ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+      // Set the preview image source to the loaded image
+      imagePreview.src = this.src;
+    });
+
+    // Set the Image object source to the loaded file
+    image.src = this.result;
+  });
+
+  // Read the selected file as a data URL
   reader.readAsDataURL(file);
-  loadImage();
 });
+
+
 
 // working of sensor button
 function sensor() {
@@ -144,7 +155,7 @@ function sensor() {
   else if (clickedButton == 2) {
     blur();
   }
-  else if(clickedButton==3) {
+  else if (clickedButton == 3) {
     color();
   }
 }
@@ -224,7 +235,7 @@ function blur() {
       ctx.putImageData(originalData, 0, 0);
       let radius = document.getElementById("sliderValue").value;
       radius = parseInt(radius);
-      blurRegion(selection.x1,selection.y1,selection.x2,selection.y2,radius/10);
+      blurRegion(selection.x1, selection.y1, selection.x2, selection.y2, radius / 10);
     }
   });
 }
@@ -247,12 +258,12 @@ function color() {
       let y = selection.y1;
       let w = selection.width;
       let h = selection.height;
-      if(selectedShape=="rectangle") {
+      if (selectedShape == "rectangle") {
         ctx.fillStyle = color;
-        ctx.fillRect(x,y,w,h);
+        ctx.fillRect(x, y, w, h);
       }
       else {
-        ctx.ellipse(x+w/2,y+h/2,w/2,h/2,0,0,2*Math.PI);
+        ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, 2 * Math.PI);
         ctx.fillStyle = color;
         ctx.fill();
       }
