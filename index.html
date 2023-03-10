@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- css linking -->
-    <link rel="stylesheet" href="style.css">
     <!-- fontawesome library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
@@ -24,13 +22,14 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/imgareaselect/1.0.0-rc.1/css/imgareaselect-default.css" />
-
+    <!-- css linking -->
+    <link rel="stylesheet" href="style.css">
     <title>Image Sensor</title>
 </head>
 
 <body>
-    <div class="outer-div">
-        <div class="is-flex">
+    <div class="pt-6 section is-medium outer-div">
+        <div class="is-flex container">
             <!-- input container -->
             <div class="container is-flex-direction-column p-2" id="input-section">
                 <h4>Input Image</h4>
@@ -74,11 +73,11 @@
             </div>
         </div>
         <!-- output section -->
-        <div class="p-2" id="ouput-section">
+        <div class="container p-2 output-section">
             <button class="button download-btn" id="imageJPG">JPG</button>
             <button class="button download-btn" id="imagePNG">PNG</button>
             <div id="canvas-section">
-                <canvas id="myCanvas" ></canvas>
+                <canvas id="myCanvas"></canvas>
             </div>
         </div>
     </div>
