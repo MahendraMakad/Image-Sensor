@@ -1,12 +1,34 @@
 const fileInput = document.getElementById('myfile');
-const imagePreview = document.getElementById('image-preview');
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext("2d");
+var imagePreview = document.getElementById('image-preview');
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext("2d");
 var originalData;// to store original image data for restoration
 var selectedShape = "rectangle"; // global variable for selecting rectangle or ellipse shape
-var clickedButton;//global variable to check which method is selected(blur,pixelate or color())
-
+//global variable for selected area
+var x1, y1, x2, y2, w, h;
 // load image into canvas
+$(document).ready(function () {
+  $('#image-preview').imgAreaSelect({
+    handles: true,
+    onSelectEnd: function (img, selection) {
+      var selectedArea = selection; // set the global variable
+      setTimeout(function () {
+        // use selectedArea after a delay of 1 second
+        if (selectedArea !== null) {
+          x1 = selectedArea.x1;
+          y1 = selectedArea.y1;
+          x2 = selectedArea.x2;
+          y2 = selectedArea.y2;
+          w = selection.width;
+          h = selection.height;
+          console.log(x1, y1, x2, y2);
+          // perform further processing
+        }
+      }, 1000);
+    }
+  });
+
+});
 
 // 3 buttons
 const button1 = document.getElementById("button1");
@@ -103,45 +125,30 @@ button3.addEventListener("click", () => {
   content.innerHTML = html3;
 });
 
+$('#myfile').change(function () {
+  var file = this.files[0];
+  var image = new Image();
+  canvas = document.getElementById('myCanvas');
+  ctx = canvas.getContext('2d');
 
-
-
-// eventlistener for taking an image file as input 
-// then it will draw input file on canas '#myCanvas' and on image
-// '#image-preview'
-fileInput.addEventListener('change', function() {
-  // Get the selected file
-  const file = this.files[0];
-
-  // Create a FileReader to read the file
-  const reader = new FileReader();
-
-  // When the reader loads, set the image source and draw it on the canvas
-  reader.addEventListener('load', function() {
-    // Create an Image object to hold the loaded image
-    const image = new Image();
-
-    // When the image loads, set the preview image source and draw it on the canvas
-    image.addEventListener('load', function() {
-      // Get the canvas context
-      const ctx = canvas.getContext('2d');
-
-      // Set the canvas dimensions to match the image dimensions
-      canvas.width = this.width;
-      canvas.height = this.height;
-
-      // Draw the image on the canvas
-      ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-
-      // Set the preview image source to the loaded image
-      imagePreview.src = this.src;
-    });
-
-    // Set the Image object source to the loaded file
-    image.src = this.result;
-  });
-
-  // Read the selected file as a data URL
+  // Load the image into the canvas and resize it
+  var reader = new FileReader();
+  reader.onload = function (event) {
+    image.src = event.target.result;
+    image.onload = function () {
+      var canvasWidth = image.width;
+      var canvasHeight = image.height;
+      if (canvasWidth > 500) {
+        canvasHeight = canvasHeight * (500 / canvasWidth);
+        canvasWidth = 500;
+      }
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+      $('#image-preview').attr('src', canvas.toDataURL()).css('display', 'inline');
+      originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    };
+  };
   reader.readAsDataURL(file);
 });
 
@@ -162,113 +169,95 @@ function sensor() {
 
 // function to pixelate selected image area
 function pixelate() {
-  //ctx.putImageData(originalData, 0, 0);
-  // getting selected image area coordinates
-  originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  ctx.putImageData(originalData, 0, 0);
   var canvasX1, canvasY1, canvasX2, canvasY2;
-  var selection = $('img#image-preview').imgAreaSelect({
-    onSelectEnd: function (img, selection) {
-      ctx.putImageData(originalData, 0, 0);
-      let pixelSize = document.getElementById("sliderValue").value;
-      pixelSize = parseInt(pixelSize);
-      var img = $('img#image-preview')[0];
-      var imgWidth = img.naturalWidth;
-      var imgHeight = img.naturalHeight;
-      var canvasWidth = canvas.width;
-      var canvasHeight = canvas.height;
-      var ratioX = canvasWidth / imgWidth;
-      var ratioY = canvasHeight / imgHeight;
-      canvasX1 = selection.x1 * ratioX;
-      canvasY1 = selection.y1 * ratioY;
-      canvasX2 = selection.x2 * ratioX;
-      canvasY2 = selection.y2 * ratioY;
-      console.log(canvasX1, canvasY1, canvasX2, canvasY2);
-      let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      //var selection = { x1: 100, y1: 100, x2: 200, y2: 200 }; // Replace with your selected area.
+  let pixelSize = document.getElementById("sliderValue").value;
+  pixelSize = parseInt(pixelSize);
+  pixelSize = pixelSize / 5;
+  var img = $('img#image-preview')[0];
+  var imgWidth = img.naturalWidth;
+  var imgHeight = img.naturalHeight;
+  var canvasWidth = canvas.width;
+  var canvasHeight = canvas.height;
+  var ratioX = canvasWidth / imgWidth;
+  var ratioY = canvasHeight / imgHeight;
+  canvasX1 = x1 * ratioX;
+  canvasY1 = y1 * ratioY;
+  canvasX2 = x2 * ratioX;
+  canvasY2 = y2 * ratioY;
+  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  for (var y = canvasY1; y < canvasY2; y += pixelSize) {
+    for (var x = canvasX1; x < canvasX2; x += pixelSize) {
+      var red = 0;
+      var green = 0;
+      var blue = 0;
+      var count = 0;
 
-      for (var y = canvasY1; y < canvasY2; y += pixelSize) {
-        for (var x = canvasX1; x < canvasX2; x += pixelSize) {
-          var red = 0;
-          var green = 0;
-          var blue = 0;
-          var count = 0;
-
-          // Calculate the average color of the surrounding pixels.
-          for (var dy = 0; dy < pixelSize; dy++) {
-            for (var dx = 0; dx < pixelSize; dx++) {
-              var index = ((y + dy) * imageData.width + (x + dx)) * 4;
-              red += imageData.data[index];
-              green += imageData.data[index + 1];
-              blue += imageData.data[index + 2];
-              count++;
-            }
-          }
-
-          red /= count;
-          green /= count;
-          blue /= count;
-
-          // Set the color of the pixel to the average color of the surrounding pixels.
-          for (var dy = 0; dy < pixelSize; dy++) {
-            for (var dx = 0; dx < pixelSize; dx++) {
-              var index = ((y + dy) * imageData.width + (x + dx)) * 4;
-              imageData.data[index] = red;
-              imageData.data[index + 1] = green;
-              imageData.data[index + 2] = blue;
-            }
-          }
+      // Calculate the average color of the surrounding pixels.
+      for (var dy = 0; dy < pixelSize; dy++) {
+        for (var dx = 0; dx < pixelSize; dx++) {
+          var index = ((y + dy) * imageData.width + (x + dx)) * 4;
+          red += imageData.data[index];
+          green += imageData.data[index + 1];
+          blue += imageData.data[index + 2];
+          count++;
         }
       }
 
-      // Update the canvas with the modified image data.
-      ctx.putImageData(imageData, 0, 0);
+      red /= count;
+      green /= count;
+      blue /= count;
+
+      // Set the color of the pixel to the average color of the surrounding pixels.
+      for (var dy = 0; dy < pixelSize; dy++) {
+        for (var dx = 0; dx < pixelSize; dx++) {
+          var index = ((y + dy) * imageData.width + (x + dx)) * 4;
+          imageData.data[index] = red;
+          imageData.data[index + 1] = green;
+          imageData.data[index + 2] = blue;
+        }
+      }
     }
-  });
+  }
+
+  // Update the canvas with the modified image data.
+  ctx.putImageData(imageData, 0, 0);
+  console.log("pixelated");
+  //   }
+  //  });
 
 }
 
+
+
+
 // function to blur selected image area
 function blur() {
-  originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  var selection = $('img#image-preview').imgAreaSelect({
-    onSelectEnd: function (img, selection) {
-      ctx.putImageData(originalData, 0, 0);
-      let radius = document.getElementById("sliderValue").value;
-      radius = parseInt(radius);
-      blurRegion(selection.x1, selection.y1, selection.x2, selection.y2, radius / 10);
-    }
-  });
+  ctx.putImageData(originalData, 0, 0);
+  let radius = document.getElementById("sliderValue").value;
+  radius = parseInt(radius);
+  blurRegion(x1, y1, w, h, radius / 10);
 }
 
 function blurRegion(x, y, width, height, radius) {
   const blurAmount = Math.min(radius, 10); // Set a maximum blur radius of 10 pixels
   ctx.filter = `blur(${blurAmount}px)`;
-  ctx.drawImage(canvas, x, y, width, height, x, y, width, height);
-  ctx.filter = "none";
+  ctx.drawImage(canvas, x, y, width, height,x,y,width,height);
 }
 
 // function to color selected image area
 function color() {
-  originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  var selection = $('img#image-preview').imgAreaSelect({
-    onSelectEnd: function (img, selection) {
-      ctx.putImageData(originalData, 0, 0);
-      let color = document.getElementById("myColor").value;
-      let x = selection.x1;
-      let y = selection.y1;
-      let w = selection.width;
-      let h = selection.height;
-      if (selectedShape == "rectangle") {
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, w, h);
-      }
-      else {
-        ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, 2 * Math.PI);
-        ctx.fillStyle = color;
-        ctx.fill();
-      }
-    }
-  });
+  ctx.putImageData(originalData, 0, 0);
+  let color = document.getElementById("myColor").value;
+  if (selectedShape == "rectangle") {
+    ctx.fillStyle = color;
+    ctx.fillRect(x1, y1, w, h);
+  }
+  else {
+    ctx.ellipse(x1 + w / 2, y1 + h / 2, w / 2, h / 2, 0, 0, 2 * Math.PI);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
 }
 
 //add eventListner to JPG download button
