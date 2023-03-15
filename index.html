@@ -5,83 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- fontawesome library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
-        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- css bulma -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
-        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- jquery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/imgareaselect/0.9.10/js/jquery.imgareaselect.min.js"
         integrity="sha512-59swnhUs+9AinrKlTPqsoO5ukNPPFbPXFyaf41MAgiTG/fv3LBZwWQWiZNYeksneLhiUo4xjh/leTZ53sZzQ4Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/imgareaselect/1.0.0-rc.1/css/imgareaselect-default.css" />
+    <link rel="stylesheet"
+        href="	https://cdnjs.cloudflare.com/ajax/libs/imgareaselect/1.0.0-rc.1/css/imgareaselect-default.css">
     <!-- css linking -->
     <link rel="stylesheet" href="style.css">
     <title>Image Sensor</title>
 </head>
 
 <body>
-    <div class="pt-6 section is-medium outer-div">
-        <div class="is-flex container">
-            <!-- input container -->
-            <div class="container is-flex-direction-column p-2" id="input-section">
-                <h4>Input Image</h4>
-                <div class="input-fle">
-                    <div class="input-file pb-4">
-                        <input type="file" id="myfile">
-                    </div>
-                    <div id="img-area p-4">
-                        <img src="" id="image-preview" alt="">
-                    </div>
-                </div>
-
-            </div>
-            <!-- options section -->
-            <div class="container p-2" id="options">
-                <h4 class="ml-2">Options</h4>
-                <div class="container option-list is-flex-direction-column">
-                    <div class="shape is-flex-direction-column p-2">
-                        <h2>Shape</h2>
-                        <div class="is-flex ">
-                            <button class="button is-small" id="rectangle">Rectangle</button>
-                            <button class="button is-small" id="ellipse">Ellipse</button>
-                        </div>
-                    </div>
-                    <div class="method is-flex-direction-row p-2">
-                        <h2>Methods</h2>
-                        <div class="is-flex">
-                            <button class="button method-btn" id="button1">Pixelate</button>
-                            <button class="button method-btn" id="button2">Blur</button>
-                            <button class="button method-btn" id="button3">Solid-color</button>
-                        </div>
-                    </div>
-                    <div class="block-size is-flex-direction-column p-2">
-                        <div class="container" id="block-space">
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-        <!-- output section -->
-        <div class="container p-2 output-section">
-            <button class="button download-btn" id="imageJPG">JPG</button>
-            <button class="button download-btn" id="imagePNG">PNG</button>
-            <div id="canvas-section">
-                <canvas id="myCanvas"></canvas>
-            </div>
-        </div>
+    <div>
+        <input type="file" id="file-input">
     </div>
-    <button class="sensor-btn" onclick="sensor()"><i class="fa-solid fa-gear pr-2"></i>Sensor</button>
+    <div>
+        <img id="image-preview">
+        <canvas id="image-canvas"></canvas>
+    </div>
     <script src="script.js"></script>
 </body>
 
