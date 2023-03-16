@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- fontawesome library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- css bulma -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- jquery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
         integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
@@ -20,13 +28,26 @@
 </head>
 
 <body>
-    <div>
-        <input type="file" id="file-input">
-    </div>
-    <div>
-        <img id="image-preview">
-        <canvas id="image-canvas"></canvas>
-    </div>
+    <section class="main-section">
+        <div class="container">
+            <div class="container pt-6 pl-6 options-container">
+                <input type="file" id="file-input">
+                <input type="checkbox" class="px-4" name="auto-preview-btn" id="auto-preview-btn">
+                <label for="auto-preview-btn" class="px-4">Auto Update</label>
+                <input type="button" class="button is-primary" id="pixelate-btn" value="Pixelate">
+            </div>
+            <div class="container pl-6 mt-6 image-container">
+                <div class="download-btns">
+                    <button class="button download-btn" id="imageJPG">JPG</button>
+                    <button class="button download-btn" id="imagePNG">PNG</button>
+                </div>
+                <div class="image-display">
+                    <img id="image-preview">
+                    <canvas id="image-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
     <script src="script.js"></script>
 </body>
 
