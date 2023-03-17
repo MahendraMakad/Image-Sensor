@@ -10,10 +10,12 @@ var checkbox = document.getElementById("auto-preview-btn");
 var canvas = document.getElementById('image-canvas');
 var ctx = canvas.getContext("2d");
 
+
+
 // calling onclick function for button pixelate when auto-preview is 
 // not enabled
 $('#pixelate-btn').click(function () {
-    pixelate(x1, y1, x2, y2);
+    pixelate();
 });
 
 // onchage event on loading of a file which will draw image and canvas for
@@ -38,11 +40,13 @@ $('#file-input').change(function () {
             ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
             $('#image-preview').attr('src', canvas.toDataURL()).css('display', 'inline');
             originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            //originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const initImgAreaSelect = function () {
-                console.log("function is called");
-                var selectionArea;
                 $('#image-preview').imgAreaSelect({
+                    x1: 0,
+                    y1: 0,
+                    x2: 100,
+                    y2: 100,
+                    aspectRatio: '1:1',
                     handles: true,
                     onSelectEnd: function (img, selection) {
                         selectedArea = selection; // set the global variable
@@ -62,11 +66,12 @@ $('#file-input').change(function () {
                         }, 1000);
                     }
                 });
-            };
+            };            
             if (canvas.width && canvas.height) {
                 console.log("canvas is complete");
                 initImgAreaSelect();
             }
+
         };
     };
     reader.readAsDataURL(file);
