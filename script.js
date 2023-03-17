@@ -46,7 +46,6 @@ $('#file-input').change(function () {
                     y1: 0,
                     x2: 100,
                     y2: 100,
-                    aspectRatio: '1:1',
                     handles: true,
                     onSelectEnd: function (img, selection) {
                         selectedArea = selection; // set the global variable
