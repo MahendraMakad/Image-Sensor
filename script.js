@@ -81,7 +81,7 @@ $('#file-input').change(function () {
 function pixelate() {
     ctx.putImageData(originalData, 0, 0);
     var canvasX1, canvasY1, canvasX2, canvasY2;
-    let pixelSize = 10;
+    let pixelSize = Math.min(x2-x2,y2-y1) / 10;
     var img = $('img#image-preview')[0];
     var imgWidth = img.naturalWidth;
     var imgHeight = img.naturalHeight;
