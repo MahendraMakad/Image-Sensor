@@ -77,61 +77,50 @@ $('#file-input').change(function () {
 });
 
 
-// function to pixelate selected image area
+
 function pixelate() {
-    ctx.putImageData(originalData, 0, 0);
-    var canvasX1, canvasY1, canvasX2, canvasY2;
-    let pixelSize = Math.min(x2-x2,y2-y1) / 10;
-    var img = $('img#image-preview')[0];
-    var imgWidth = img.naturalWidth;
-    var imgHeight = img.naturalHeight;
-    var canvasWidth = canvas.width;
-    var canvasHeight = canvas.height;
-    var ratioX = canvasWidth / imgWidth;
-    var ratioY = canvasHeight / imgHeight;
-    canvasX1 = x1 * ratioX;
-    canvasY1 = y1 * ratioY;
-    canvasX2 = x2 * ratioX;
-    canvasY2 = y2 * ratioY;
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    for (var y = canvasY1; y < canvasY2; y += pixelSize) {
-        for (var x = canvasX1; x < canvasX2; x += pixelSize) {
-            var red = 0;
-            var green = 0;
-            var blue = 0;
-            var count = 0;
-
-            // Calculate the average color of the surrounding pixels.
-            for (var dy = 0; dy < pixelSize; dy++) {
-                for (var dx = 0; dx < pixelSize; dx++) {
-                    var index = ((y + dy) * imageData.width + (x + dx)) * 4;
-                    red += imageData.data[index];
-                    green += imageData.data[index + 1];
-                    blue += imageData.data[index + 2];
-                    count++;
-                }
-            }
-
-            red /= count;
-            green /= count;
-            blue /= count;
-
-            // Set the color of the pixel to the average color of the surrounding pixels.
-            for (var dy = 0; dy < pixelSize; dy++) {
-                for (var dx = 0; dx < pixelSize; dx++) {
-                    var index = ((y + dy) * imageData.width + (x + dx)) * 4;
-                    imageData.data[index] = red;
-                    imageData.data[index + 1] = green;
-                    imageData.data[index + 2] = blue;
-                }
-            }
+  ctx.putImageData(originalData, 0, 0);
+  
+  // Get the dimensions of the selected region and the canvas
+  const regionWidth = x2 - x1;
+  const regionHeight = y2 - y1;
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  
+  // Calculate the optimal block size based on the dimensions of the selected region
+  let blockSize = Math.max(5, Math.min(Math.floor(regionWidth / 10), Math.floor(regionHeight / 10)));
+  
+  // Loop through each block
+  for (let y = y1; y < y2; y += blockSize) {
+    for (let x = x1; x < x2; x += blockSize) {
+      let r = 0, g = 0, b = 0, a = 0, count = 0;
+      
+      // Calculate the average color of the block
+      for (let dy = 0; dy < blockSize && y + dy < y2; dy++) {
+        for (let dx = 0; dx < blockSize && x + dx < x2; dx++) {
+          const pixelData = ctx.getImageData(x + dx, y + dy, 1, 1).data;
+          r += pixelData[0];
+          g += pixelData[1];
+          b += pixelData[2];
+          a += pixelData[3];
+          count++;
         }
+      }
+      r /= count;
+      g /= count;
+      b /= count;
+      a /= count;
+      
+      // Set the block color
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+      ctx.fillRect(x, y, Math.min(blockSize, x2 - x), Math.min(blockSize, y2 - y));
     }
-
-    // Update the canvas with the modified image data.
-    ctx.putImageData(imageData, 0, 0);
-    console.log("pixelated");
+  }
+  ctx.putImageData(imageData, 0, 0);
+  console.log("pixelated");
 }
+
+
 
 //add eventListner to JPG download button
 // add event listener to button
