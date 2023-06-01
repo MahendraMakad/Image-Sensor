@@ -1,7 +1,7 @@
 // Select the input file element
 const fileInput = document.querySelector('#file-input');
 // global variable to preserve original image data
-var originalData;
+var originalData,originalWidth,originalHeight;
 // global varibles for selected coordinates of image using imgareaselect
 var x1, y1, x2, y2;
 // checkbox for auto preview
@@ -29,6 +29,8 @@ $('#file-input').change(function () {
     reader.onload = function (event) {
         image.src = event.target.result;
         image.onload = function () {
+            originalWidth = image.width;
+            originalHeight = image.height;
             var canvasWidth = image.width;
             var canvasHeight = image.height;
             if (canvasWidth > 400) {
@@ -122,46 +124,27 @@ function pixelate() {
 
 
 
-//add eventListner to JPG download button
-// add event listener to button
-document.getElementById("imageJPG").addEventListener("click", function () {
+//add eventListner to JPG and PNG download buttons
+document.getElementById("imageJPG").addEventListener("click", downloadImage);
+document.getElementById("imagePNG").addEventListener("click", downloadImage);
 
-    if (canvas.height && canvas.width) {
-        // get the canvas data as a JPG image
-        let imageData = canvas.toDataURL("image/jpeg");
+function downloadImage(event) {
+  var modifiedCanvas = document.createElement('canvas');
+  modifiedCanvas.width = originalWidth;
+  modifiedCanvas.height = originalHeight;
+  var modifiedCtx = modifiedCanvas.getContext('2d');
+  modifiedCtx.drawImage(canvas, 0, 0, originalWidth, originalHeight);
+  modifiedCtx.globalCompositeOperation = 'destination-in';
+  modifiedCtx.rect(0, 0, originalWidth, originalHeight);
+  modifiedCtx.fill();
+  var downloadLink = document.createElement('a');
+  if (event.target.id === 'imageJPG') {
+    downloadLink.download = 'my-image.jpg';
+    downloadLink.href = modifiedCanvas.toDataURL('image/jpeg',0.9);
+  } else if (event.target.id === 'imagePNG') {
+    downloadLink.download = 'my-image.png';
+    downloadLink.href = modifiedCanvas.toDataURL('image/png',1);
+  }
+  downloadLink.click();
+}
 
-        // create a link element and set its download attribute
-        const link = document.createElement("a");
-        link.download = "img.jpg";
-
-        // set the href attribute to the canvas data
-        link.href = imageData;
-
-        // add the link to the document and simulate a click
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-});
-
-
-//add eventListner to PNG download button
-// add event listener to button
-document.getElementById("imagePNG").addEventListener("click", function () {
-    // get the canvas data as a JPG image
-    if (canvas.height && canvas.width) {
-        let imageData = canvas.toDataURL("image/png");
-
-        // create a link element and set its download attribute
-        const link = document.createElement("a");
-        link.download = "img.png";
-
-        // set the href attribute to the canvas data
-        link.href = imageData;
-
-        // add the link to the document and simulate a click
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-});
